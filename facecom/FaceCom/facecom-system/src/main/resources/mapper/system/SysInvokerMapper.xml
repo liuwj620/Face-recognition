@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.facecom.system.mapper.SysInvokerMapper">
+    
+    <resultMap type="SysInvoker" id="SysInvokerResult">
+        <result property="invokerId"    column="invoker_id"    />
+        <result property="invokerIp"    column="invoker_ip"    />
+        <result property="invokerTime"    column="invoker_time"    />
+        <result property="invokerResult"    column="invoker_result"    />
+        <result property="invokerStatus"    column="invoker_status"    />
+        <result property="invokerSfzmhm"    column="invoker_sfzmhm"    />
+        <result property="invokerMsg"    column="invoker_msg"    />
+    </resultMap>
+
+    <sql id="selectSysInvokerVo">
+        select invoker_id, invoker_ip, invoker_time, invoker_result, invoker_status, invoker_sfzmhm, invoker_msg from sys_invoker
+    </sql>
+
+    <select id="selectSysInvokerList" parameterType="SysInvoker" resultMap="SysInvokerResult">
+        <include refid="selectSysInvokerVo"/>
+        <where>  
+            <if test="invokerIp != null  and invokerIp != ''"> and invoker_ip = #{invokerIp}</if>
+            <if test="invokerTime != null "> and invoker_time = #{invokerTime}</if>
+            <if test="invokerResult != null  and invokerResult != ''"> and invoker_result = #{invokerResult}</if>
+            <if test="invokerStatus != null  and invokerStatus != ''"> and invoker_status = #{invokerStatus}</if>
+            <if test="invokerSfzmhm != null  and invokerSfzmhm != ''"> and invoker_sfzmhm = #{invokerSfzmhm}</if>
+            <if test="invokerMsg != null  and invokerMsg != ''"> and invoker_msg = #{invokerMsg}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysInvokerById" parameterType="Long" resultMap="SysInvokerResult">
+        <include refid="selectSysInvokerVo"/>
+        where invoker_id = #{invokerId}
+    </select>
+        
+    <insert id="insertSysInvoker" parameterType="SysInvoker">
+        <selectKey keyProperty="invokerId" resultType="long" order="BEFORE">
+            SELECT seq_sys_invoker.NEXTVAL as invokerId FROM DUAL
+        </selectKey>
+        insert into sys_invoker
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="invokerId != null">invoker_id,</if>
+            <if test="invokerIp != null and invokerIp != ''">invoker_ip,</if>
+            <if test="invokerTime != null">invoker_time,</if>
+            <if test="invokerResult != null">invoker_result,</if>
+            <if test="invokerStatus != null">invoker_status,</if>
+            <if test="invokerSfzmhm != null and invokerSfzmhm != ''">invoker_sfzmhm,</if>
+            <if test="invokerMsg != null">invoker_msg,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="invokerId != null">#{invokerId},</if>
+            <if test="invokerIp != null and invokerIp != ''">#{invokerIp},</if>
+            <if test="invokerTime != null">#{invokerTime},</if>
+            <if test="invokerResult != null">#{invokerResult},</if>
+            <if test="invokerStatus != null">#{invokerStatus},</if>
+            <if test="invokerSfzmhm != null and invokerSfzmhm != ''">#{invokerSfzmhm},</if>
+            <if test="invokerMsg != null">#{invokerMsg},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysInvoker" parameterType="SysInvoker">
+        update sys_invoker
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invokerIp != null and invokerIp != ''">invoker_ip = #{invokerIp},</if>
+            <if test="invokerTime != null">invoker_time = #{invokerTime},</if>
+            <if test="invokerResult != null">invoker_result = #{invokerResult},</if>
+            <if test="invokerStatus != null">invoker_status = #{invokerStatus},</if>
+            <if test="invokerSfzmhm != null and invokerSfzmhm != ''">invoker_sfzmhm = #{invokerSfzmhm},</if>
+            <if test="invokerMsg != null">invoker_msg = #{invokerMsg},</if>
+        </trim>
+        where invoker_id = #{invokerId}
+    </update>
+
+    <delete id="deleteSysInvokerById" parameterType="Long">
+        delete from sys_invoker where invoker_id = #{invokerId}
+    </delete>
+
+    <delete id="deleteSysInvokerByIds" parameterType="String">
+        delete from sys_invoker where invoker_id in 
+        <foreach item="invokerId" collection="array" open="(" separator="," close=")">
+            #{invokerId}
+        </foreach>
+    </delete>
+</mapper>

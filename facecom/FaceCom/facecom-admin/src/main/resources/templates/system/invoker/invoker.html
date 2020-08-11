@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('调用日志列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>调用者IP：</label>
+                                <input type="text" name="invokerIp"/>
+                            </li>
+                            <li class="select-time">
+                                <label>调用时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginInvokerTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endInvokerTime]"/>
+                            </li>
+                            <li>
+                                <label>调用结果：</label>
+                                <select name="invokerResult">
+                                	<option value="">所有</option>
+                                    <option value="0">合法</option>
+                                    <option value="1">不合法</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>是否合法：</label>
+                                <select name="invokerStatus">
+                                	<option value="">所有</option>
+                                    <option value="0">合法</option>
+                                    <option value="1">不合法</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>身份证：</label>
+                                <input type="text" name="invokerSfzmhm"/>
+                            </li>
+                            <li>
+                                <label>失败原因：</label>
+                                <input type="text" name="invokerMsg"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+            <!--    <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:invoker:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:invoker:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>-->
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:invoker:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:invoker:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:invoker:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:invoker:remove')}]];
+        var prefix = ctx + "system/invoker";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "调用日志",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'invokerId',
+                    title: '表主键seq_sys_invoker.nextval',
+                    visible: false
+                },
+                {
+                    field: 'invokerIp',
+                    title: '调用者IP'
+                },
+                {
+                    field: 'invokerTime',
+                    title: '调用时间'
+                },
+                {
+                    field: 'invokerResult',
+                    title: '调用接口结果',
+                    formatter:function(value,row,index){
+                    	if(value==0){
+                    		return "成功";
+                    	}else{
+                    		return "失败";
+                    	}
+                    }
+                },
+                {
+                    field: 'invokerStatus',
+                    title: '是否合法调用者',
+                    formatter:function(value,row,index){
+                    	if(value==0){
+                    		return "成功";
+                    	}else{
+                    		return "失败";
+                    	}
+                    }
+                },
+                {
+                    field: 'invokerSfzmhm',
+                    title: '核对的身份证'
+                },
+                {
+                    field: 'invokerMsg',
+                    title: '调用失败原因'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        //actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.invokerId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.invokerId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

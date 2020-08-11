@@ -1,0 +1,32 @@
+--步骤一：
+--查看数据文件路径语句
+select name from v$datafile;
+--创建数据表空间  
+create tablespace ry_data
+logging
+datafile 'D:\APP\USER\ORADATA\ORCL\RY01.DBF'
+size 4096m
+autoextend on
+next 100m;
+--步骤二：
+--创建用户并指定表空间 
+create user ry identified by ryadmin default tablespace ry_data temporary tablespace temp
+--步骤三：
+--给用户授予权限
+-- Grant/Revoke object privileges 
+grant execute on SYS.DBMS_CRYPTO to ry;
+grant execute on SYS.DBMS_OBFUSCATION_TOOLKIT to ry;
+grant execute on SYS.DBMS_RANDOM to ry;
+-- Grant/Revoke role privileges 
+grant connect to ry;
+grant resource to ry;
+-- Grant/Revoke system privileges 
+grant create any index to ry;
+grant create any job to ry;
+grant create any sequence to ry;
+grant create any synonym to ry;
+grant create any table to ry;
+grant create any trigger to ry;
+grant create any view to ry;
+grant create procedure to ry;
+grant unlimited tablespace to ry;

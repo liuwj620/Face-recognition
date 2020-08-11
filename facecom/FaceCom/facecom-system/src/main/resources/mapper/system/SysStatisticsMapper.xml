@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.facecom.system.mapper.SysStatisticsMapper">
+    
+    <resultMap type="SysStatistics" id="SysStatisticsResult">
+        <result property="statisticsId"    column="statistics_id"    />
+        <result property="fail"    column="fail"    />
+        <result property="nofail"    column="nofail"    />
+        <result property="failPass"    column="fail_pass"    />
+        <result property="nofailPass"    column="nofail_pass"    />
+        <result property="contrast"    column="contrast"    />
+        <result property="deptCode"    column="dept_code"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="systemCode"    column="system_code"    />
+        <result property="systemName"    column="system_name"    />
+    </resultMap>
+
+    <sql id="selectSysStatisticsVo">
+        select statistics_id, fail, nofail, fail_pass, nofail_pass, contrast, dept_code, dept_name, system_code, system_name from sys_statistics
+    </sql>
+
+    <select id="selectSysStatisticsList" parameterType="SysStatistics" resultMap="SysStatisticsResult">
+        <include refid="selectSysStatisticsVo"/>
+        <where>  
+            <if test="deptCode != null  and deptCode != ''"> and dept_code = #{deptCode}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat(concat('%', #{deptName}), '%')</if>
+            <if test="systemCode != null  and systemCode != ''"> and system_code = #{systemCode}</if>
+            <if test="systemName != null  and systemName != ''"> and system_name like concat(concat('%', #{systemName}), '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysStatisticsById" parameterType="Long" resultMap="SysStatisticsResult">
+        <include refid="selectSysStatisticsVo"/>
+        where statistics_id = #{statisticsId}
+    </select>
+        
+    <insert id="insertSysStatistics" parameterType="SysStatistics">
+        <selectKey keyProperty="statisticsId" resultType="long" order="BEFORE">
+            SELECT seq_sys_statistics.NEXTVAL as statisticsId FROM DUAL
+        </selectKey>
+        insert into sys_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statisticsId != null">statistics_id,</if>
+            <if test="fail != null">fail,</if>
+            <if test="nofail != null">nofail,</if>
+            <if test="failPass != null">fail_pass,</if>
+            <if test="nofailPass != null">nofail_pass,</if>
+            <if test="contrast != null and contrast != ''">contrast,</if>
+            <if test="deptCode != null">dept_code,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="systemCode != null">system_code,</if>
+            <if test="systemName != null">system_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statisticsId != null">#{statisticsId},</if>
+            <if test="fail != null">#{fail},</if>
+            <if test="nofail != null">#{nofail},</if>
+            <if test="failPass != null">#{failPass},</if>
+            <if test="nofailPass != null">#{nofailPass},</if>
+            <if test="contrast != null and contrast != ''">#{contrast},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="systemCode != null">#{systemCode},</if>
+            <if test="systemName != null">#{systemName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysStatistics" parameterType="SysStatistics">
+        update sys_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fail != null">fail = #{fail},</if>
+            <if test="nofail != null">nofail = #{nofail},</if>
+            <if test="failPass != null">fail_pass = #{failPass},</if>
+            <if test="nofailPass != null">nofail_pass = #{nofailPass},</if>
+            <if test="contrast != null and contrast != ''">contrast = #{contrast},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="systemCode != null">system_code = #{systemCode},</if>
+            <if test="systemName != null">system_name = #{systemName},</if>
+        </trim>
+        where statistics_id = #{statisticsId}
+    </update>
+
+    <delete id="deleteSysStatisticsById" parameterType="Long">
+        delete from sys_statistics where statistics_id = #{statisticsId}
+    </delete>
+
+    <delete id="deleteSysStatisticsByIds" parameterType="String">
+        delete from sys_statistics where statistics_id in 
+        <foreach item="statisticsId" collection="array" open="(" separator="," close=")">
+            #{statisticsId}
+        </foreach>
+    </delete>
+</mapper>
