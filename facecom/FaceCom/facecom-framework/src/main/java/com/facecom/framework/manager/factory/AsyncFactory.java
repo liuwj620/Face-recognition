@@ -11,10 +11,14 @@ import com.facecom.common.utils.spring.SpringUtils;
 import com.facecom.framework.shiro.session.OnlineSession;
 import com.facecom.framework.util.LogUtils;
 import com.facecom.framework.util.ShiroUtils;
+import com.facecom.system.domain.SysInvoker;
 import com.facecom.system.domain.SysLogininfor;
 import com.facecom.system.domain.SysOperLog;
+import com.facecom.system.domain.SysQps;
 import com.facecom.system.domain.SysUserOnline;
+import com.facecom.system.service.ISysInvokerService;
 import com.facecom.system.service.ISysOperLogService;
+import com.facecom.system.service.ISysQpsService;
 import com.facecom.system.service.ISysUserOnlineService;
 import com.facecom.system.service.impl.SysLogininforServiceImpl;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -79,7 +83,26 @@ public class AsyncFactory
             }
         };
     }
-
+    
+    /**
+     * 插入QPS记录
+     * 
+     * @param operLog 接口调用记录
+     * @return 任务task
+     */
+    public static TimerTask recordFaceQps(final SysQps sysQps)
+    {
+        return new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                // 远程查询操作地点
+                SpringUtils.getBean(ISysQpsService.class).insertSysQps(sysQps);
+            }
+        };
+    }
+    
     /**
      * 记录登陆信息
      * 

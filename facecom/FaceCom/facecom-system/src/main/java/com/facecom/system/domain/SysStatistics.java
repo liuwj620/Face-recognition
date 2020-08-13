@@ -20,19 +20,19 @@ public class SysStatistics extends BaseEntity
 
     /** 通过人数 */
     @Excel(name = "通过人数")
-    private Long fail;
+    private int fail;
 
     /** 不通过人数 */
     @Excel(name = "不通过人数")
-    private Long nofail;
+    private int nofail;
 
     /** 通过率 */
     @Excel(name = "通过率")
-    private Long failPass;
+    private int failPass;
 
     /** 不通过率 */
     @Excel(name = "不通过率")
-    private Long nofailPass;
+    private int nofailPass;
 
     /** 对比参数 */
     @Excel(name = "对比参数")
@@ -63,39 +63,39 @@ public class SysStatistics extends BaseEntity
     {
         return statisticsId;
     }
-    public void setFail(Long fail) 
+    public void setFail(int fail) 
     {
         this.fail = fail;
     }
 
-    public Long getFail() 
+    public int getFail() 
     {
         return fail;
     }
-    public void setNofail(Long nofail) 
+    public void setNofail(int nofail) 
     {
         this.nofail = nofail;
     }
 
-    public Long getNofail() 
+    public int getNofail() 
     {
         return nofail;
     }
-    public void setFailPass(Long failPass) 
+    public void setFailPass(int failPass) 
     {
         this.failPass = failPass;
     }
 
-    public Long getFailPass() 
+    public int getFailPass() 
     {
         return failPass;
     }
-    public void setNofailPass(Long nofailPass) 
+    public void setNofailPass(int nofailPass) 
     {
         this.nofailPass = nofailPass;
     }
 
-    public Long getNofailPass() 
+    public int getNofailPass() 
     {
         return nofailPass;
     }
@@ -160,4 +160,23 @@ public class SysStatistics extends BaseEntity
             .append("systemName", getSystemName())
             .toString();
     }
+
+	public SysStatistics( int fail, int nofail, int failPass, int nofailPass, String contrast,
+			String deptCode, String deptName, String systemCode, String systemName) {
+		super();
+		this.fail = fail;
+		this.nofail = nofail;
+		this.failPass = failPass;
+		this.nofailPass = nofailPass;
+		this.contrast = contrast;
+		this.deptCode = deptCode;
+		this.deptName = deptName;
+		this.systemCode = systemCode;
+		this.systemName = systemName;
+	}
+
+	public SysStatistics() {
+		super();
+	}
+    
 }

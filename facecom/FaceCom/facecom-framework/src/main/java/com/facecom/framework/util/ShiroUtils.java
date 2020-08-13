@@ -10,6 +10,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import com.facecom.common.utils.StringUtils;
 import com.facecom.common.utils.bean.BeanUtils;
 import com.facecom.framework.shiro.realm.UserRealm;
+import com.facecom.system.domain.SysInvoker;
 import com.facecom.system.domain.SysUser;
 
 /**

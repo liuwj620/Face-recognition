@@ -119,4 +119,20 @@ public class SysInvoker extends BaseEntity
             .append("invokerMsg", getInvokerMsg())
             .toString();
     }
+
+	public SysInvoker(String invokerIp, Date invokerTime, String invokerResult, String invokerStatus,
+			String invokerSfzmhm, String invokerMsg) {
+		super();
+		this.invokerIp = invokerIp;
+		this.invokerTime = invokerTime;
+		this.invokerResult = invokerResult;
+		this.invokerStatus = invokerStatus;
+		this.invokerSfzmhm = invokerSfzmhm;
+		this.invokerMsg = invokerMsg;
+	}
+
+	public SysInvoker() {
+		super();
+	}
+    
 }

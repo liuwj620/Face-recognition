@@ -16,6 +16,7 @@ import com.facecom.common.core.domain.AjaxResult;
 import com.facecom.common.utils.ServletUtils;
 import com.facecom.common.utils.StringUtils;
 import com.facecom.common.utils.IpUtils;
+import com.facecom.common.utils.QpsLimit;
 import com.facecom.system.domain.SysUser;
 import com.facecom.system.service.ISysUserService;
 
@@ -38,7 +39,7 @@ public class SysLoginController extends BaseController
         {
             return ServletUtils.renderString(response, "{\"code\":\"1\",\"msg\":\"未登录或登录超时。请重新登录\"}");
         }
-
+        
         return "login";
     }
 
