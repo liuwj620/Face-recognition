@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.facecom.system.mapper.SysQpsMapper">
+    
+    <resultMap type="SysQps" id="SysQpsResult">
+        <result property="qpsId"    column="qps_id"    />
+        <result property="qps"    column="qps"    />
+        <result property="occurs"    column="occurs"    />
+        <result property="responseTime"    column="response_time"    />
+        <result property="deptCode"    column="dept_code"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="systemCode"    column="system_code"    />
+        <result property="systemName"    column="system_name"    />
+    </resultMap>
+
+    <sql id="selectSysQpsVo">
+        select qps_id, qps, occurs, response_time, dept_code, dept_name, system_code, system_name from sys_qps
+    </sql>
+
+    <select id="selectSysQpsList" parameterType="SysQps" resultMap="SysQpsResult">
+        <include refid="selectSysQpsVo"/>
+        <where>  
+            <if test="qps != null "> and qps = #{qps}</if>
+            <if test="occurs != null "> and occurs = #{occurs}</if>
+            <if test="responseTime != null "> and response_time = #{responseTime}</if>
+            <if test="deptCode != null  and deptCode != ''"> and dept_code = #{deptCode}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat(concat('%', #{deptName}), '%')</if>
+            <if test="systemCode != null  and systemCode != ''"> and system_code = #{systemCode}</if>
+            <if test="systemName != null  and systemName != ''"> and system_name like concat(concat('%', #{systemName}), '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysQpsById" parameterType="Long" resultMap="SysQpsResult">
+        <include refid="selectSysQpsVo"/>
+        where qps_id = #{qpsId}
+    </select>
+        
+    <insert id="insertSysQps" parameterType="SysQps">
+        <selectKey keyProperty="qpsId" resultType="long" order="BEFORE">
+            SELECT seq_sys_qps.NEXTVAL as qpsId FROM DUAL
+        </selectKey>
+        insert into sys_qps
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qpsId != null">qps_id,</if>
+            <if test="qps != null">qps,</if>
+            <if test="occurs != null">occurs,</if>
+            <if test="responseTime != null">response_time,</if>
+            <if test="deptCode != null">dept_code,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="systemCode != null">system_code,</if>
+            <if test="systemName != null">system_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qpsId != null">#{qpsId},</if>
+            <if test="qps != null">#{qps},</if>
+            <if test="occurs != null">#{occurs},</if>
+            <if test="responseTime != null">#{responseTime},</if>
+            <if test="deptCode != null">#{deptCode},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="systemCode != null">#{systemCode},</if>
+            <if test="systemName != null">#{systemName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysQps" parameterType="SysQps">
+        update sys_qps
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="qps != null">qps = #{qps},</if>
+            <if test="occurs != null">occurs = #{occurs},</if>
+            <if test="responseTime != null">response_time = #{responseTime},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="systemCode != null">system_code = #{systemCode},</if>
+            <if test="systemName != null">system_name = #{systemName},</if>
+        </trim>
+        where qps_id = #{qpsId}
+    </update>
+
+    <delete id="deleteSysQpsById" parameterType="Long">
+        delete from sys_qps where qps_id = #{qpsId}
+    </delete>
+
+    <delete id="deleteSysQpsByIds" parameterType="String">
+        delete from sys_qps where qps_id in 
+        <foreach item="qpsId" collection="array" open="(" separator="," close=")">
+            #{qpsId}
+        </foreach>
+    </delete>
+</mapper>

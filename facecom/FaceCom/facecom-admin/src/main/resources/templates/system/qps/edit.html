@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改QPS监控')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-qps-edit" th:object="${sysQps}">
+            <input name="qpsId" th:field="*{qpsId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">每秒钟request/事务：</label>
+                <div class="col-sm-8">
+                    <input name="qps" th:field="*{qps}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">并发数：</label>
+                <div class="col-sm-8">
+                    <input name="occurs" th:field="*{occurs}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">响应时间：</label>
+                <div class="col-sm-8">
+                    <input name="responseTime" th:field="*{responseTime}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">部门编号：</label>
+                <div class="col-sm-8">
+                    <input name="deptCode" th:field="*{deptCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">部门名称：</label>
+                <div class="col-sm-8">
+                    <input name="deptName" th:field="*{deptName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">系统编号：</label>
+                <div class="col-sm-8">
+                    <input name="systemCode" th:field="*{systemCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="systemName" th:field="*{systemName}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/qps";
+        $("#form-qps-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-qps-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>
